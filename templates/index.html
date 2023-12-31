@@ -1,0 +1,50 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Similarity App</title>
+</head>
+<body>
+    <h1>Semantic Similarity App</h1>
+    <form id="similarityForm">
+        <label for="text1">Text 1:</label>
+        <textarea id="text1" name="text1" rows="4" cols="50" placeholder="Enter text 1"></textarea>
+        <br>
+        <label for="text2">Text 2:</label>
+        <textarea id="text2" name="text2" rows="4" cols="50" placeholder="Enter text 2"></textarea>
+        <br>
+        <button type="button" onclick="predictSimilarity()">Predict Similarity</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function predictSimilarity() {
+            console.log('Form submitted!'); // Add this line for debugging
+
+            var text1 = document.getElementById('text1').value;
+            var text2 = document.getElementById('text2').value;
+
+            // Make a POST request to the Flask API
+            fetch('/predict_similarity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text1: text1, text2: text2 }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = 'Similarity Score: ' + data.similarity_score;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 'Error occurred. Please try again.';
+            });
+        }
+    </script>
+</body>
+</html>
